@@ -17,6 +17,7 @@ from mustache import kth_diag_indices, parseBP, read_bias, read_pd, read_hic_fil
 
 from scipy.stats import expon, norm
 from scipy.ndimage import gaussian_filter
+from perona_malik import anisodiff
 from scipy.ndimage.filters import maximum_filter
 from scipy.signal import convolve2d
 import scipy.ndimage.measurements as scipy_measurements
@@ -304,17 +305,17 @@ def diff_mustache(c1, c2, chromosome,chromosome2, res, start, end, mask_size, di
         sigma = o
         w = 2*math.ceil(2*sigma)+1
         t = (((w - 1)/2)-0.5)/sigma
-        Gp = gaussian_filter(c, o, truncate=t, order=0)
-        Gp1 = gaussian_filter(c1, o, truncate=t, order=0)
-        Gp2 = gaussian_filter(c2, o, truncate=t, order=0)
+        Gp = anisodiff(c) #for gaussian to anisodiff
+        Gp1 = anisodiff(c1) #for gaussian to anisodiff
+        Gp2 = anisodiff(c2) #for gaussian to anisodiff
         scales[o][1] = sigma
 
         sigma = o * 2**((2-1)/s)
         w = 2*math.ceil(2*sigma)+1
         t = (((w - 1)/2)-0.5)/sigma
-        Gc = gaussian_filter(c, sigma, truncate=t, order=0)
-        Gc1 = gaussian_filter(c1, sigma, truncate=t, order=0)
-        Gc2 = gaussian_filter(c2, sigma, truncate=t, order=0)
+        Gc = anisodiff(c) #for gaussian to anisodiff: gaussian_filter(c, sigma, truncate=t, order=0)
+        Gc1 = anisodiff(c1) #for gaussian to anisodiff: gaussian_filter(c1, sigma, truncate=t, order=0)
+        Gc2 = anisodiff(c2) #for gaussian to anisodiff: gaussian_filter(c2, sigma, truncate=t, order=0)
         scales[o][2] = sigma
 
         Lp = Gp - Gc
@@ -327,9 +328,9 @@ def diff_mustache(c1, c2, chromosome,chromosome2, res, start, end, mask_size, di
         sigma = o * 2**((3-1)/s)
         w = 2*math.ceil(2*sigma)+1
         t = (((w - 1)/2)-0.5)/sigma
-        Gn = gaussian_filter(c, sigma, truncate=t, order=0)
-        Gn1 = gaussian_filter(c1, sigma, truncate=t, order=0)
-        Gn2 = gaussian_filter(c2, sigma, truncate=t, order=0)
+        Gn = anisodiff(c) #for gaussian to anisodiff: gaussian_filter(c, sigma, truncate=t, order=0)
+        Gn1 = anisodiff(c1) #for gaussian to anisodiff: gaussian_filter(c1, sigma, truncate=t, order=0)
+        Gn2 = anisodiff(c2) #for gaussian to anisodiff: gaussian_filter(c2, sigma, truncate=t, order=0)
         scales[o][3] = sigma
 
         #Lp = Gp - Gc
@@ -355,9 +356,9 @@ def diff_mustache(c1, c2, chromosome,chromosome2, res, start, end, mask_size, di
             sigma = o * 2**((i)/s)
             w = 2*math.ceil(2*sigma)+1
             t = ((w - 1)/2 - 0.5)/sigma
-            Gn = gaussian_filter(c, sigma, truncate=t, order=0)
-            Gn1 = gaussian_filter(c1, sigma, truncate=t, order=0)
-            Gn2 = gaussian_filter(c2, sigma, truncate=t, order=0)
+            Gn = anisodiff(c) #for gaussian to anisodiff: gaussian_filter(c, sigma, truncate=t, order=0)
+            Gn1 = anisodiff(c1) #for gaussian to anisodiff: gaussian_filter(c1, sigma, truncate=t, order=0)
+            Gn2 = anisodiff(c2) #for gaussian to anisodiff: gaussian_filter(c2, sigma, truncate=t, order=0)
             scales[o][i+1] = sigma
             
             Ln = Gc - Gn

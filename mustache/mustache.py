@@ -16,6 +16,7 @@ import cooler
 
 from scipy.stats import expon
 from scipy.ndimage import gaussian_filter
+from perona_malik import anisodiff
 from scipy.ndimage.filters import maximum_filter
 from scipy.signal import convolve2d
 import scipy.ndimage.measurements as scipy_measurements
@@ -706,13 +707,13 @@ def mustache(c, chromosome, chromosome2, res, pval_weights, start, end, mask_siz
         sigma = o
         w = 2 * math.ceil(2 * sigma) + 1
         t = (((w - 1) / 2) - 0.5) / sigma
-        Gp = gaussian_filter(c, o, truncate=t, order=0)
+        Gp = anisodiff(c) #gaussian_filter(c, o, truncate=t, order=0)
         scales[o][1] = sigma
 
         sigma = o * 2 ** ((2 - 1) / s)
         w = 2 * math.ceil(2 * sigma) + 1
         t = (((w - 1) / 2) - 0.5) / sigma
-        Gc = gaussian_filter(c, sigma, truncate=t, order=0)
+        Gc = anisodiff(c) #gaussian_filter(c, sigma, truncate=t, order=0)
         scales[o][2] = sigma
 
         Lp = Gp - Gc
@@ -721,7 +722,7 @@ def mustache(c, chromosome, chromosome2, res, pval_weights, start, end, mask_siz
         sigma = o * 2 ** ((3 - 1) / s)
         w = 2 * math.ceil(2 * sigma) + 1
         t = (((w - 1) / 2) - 0.5) / sigma
-        Gn = gaussian_filter(c, sigma, truncate=t, order=0)
+        Gn = anisodiff(c) #gaussian_filter(c, sigma, truncate=t, order=0)
         scales[o][3] = sigma
 
         # Lp = Gp - Gc
@@ -738,7 +739,7 @@ def mustache(c, chromosome, chromosome2, res, pval_weights, start, end, mask_siz
             sigma = o * 2 ** ((i) / s)
             w = 2 * math.ceil(2 * sigma) + 1
             t = ((w - 1) / 2 - 0.5) / sigma
-            Gn = gaussian_filter(c, sigma, truncate=t, order=0)
+            Gn = anisodiff(c) #gaussian_filter(c, sigma, truncate=t, order=0)
             scales[o][i + 1] = sigma
 
             Ln = Gc - Gn
